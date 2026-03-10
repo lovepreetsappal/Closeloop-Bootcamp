@@ -29,6 +29,8 @@ def add_to_basket(item: BasketItem):
     global basket_id_counter
     if not any(p.id == item.product_id for p in products):
         raise HTTPException(status_code=404, detail="Product not found")
+    if item.quantity <= 0:
+        raise HTTPException(status_code=400, detail="Quantity must be greater than 0")
     item.id = basket_id_counter
     basket_id_counter += 1
     basket.append(item)
@@ -44,22 +46,24 @@ def view_basket():
                 "id": item.id,
                 "product": product,
                 "quantity": item.quantity,
-                "total_price": item.quantity * item.product_id  
+                "total_price": item.quantity * product.price
             })
     return result
 
 @app.put("/basket/{item_id}")
 def update_quantity(item_id: int, quantity: int):
+    if quantity <= 0:
+        raise HTTPException(status_code=400, detail="Quantity must be greater than 0")
     for item in basket:
         if item.id == item_id:
-            item.quantity = quantity  
+            item.quantity = quantity
             return item
     raise HTTPException(status_code=404, detail="Item not found")
 
 @app.delete("/basket/{item_id}")
 def remove_from_basket(item_id: int):
     for i, item in enumerate(basket):
-        if item.product_id == item_id:  
+        if item.id == item_id:
             del basket[i]
             return {"message": "Item removed"}
     raise HTTPException(status_code=404, detail="Item not found")
