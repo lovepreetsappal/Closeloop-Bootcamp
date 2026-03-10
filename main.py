@@ -27,7 +27,6 @@ def get_products():
 @app.post("/basket")
 def add_to_basket(item: BasketItem):
     global basket_id_counter
-    # check if product exists
     if not any(p.id == item.product_id for p in products):
         raise HTTPException(status_code=404, detail="Product not found")
     item.id = basket_id_counter
@@ -37,7 +36,6 @@ def add_to_basket(item: BasketItem):
 
 @app.get("/basket")
 def view_basket():
-    # To make it more useful, include product details
     result = []
     for item in basket:
         product = next((p for p in products if p.id == item.product_id), None)
@@ -45,7 +43,8 @@ def view_basket():
             result.append({
                 "id": item.id,
                 "product": product,
-                "quantity": item.quantity
+                "quantity": item.quantity,
+                "total_price": item.quantity * item.product_id  # BUG 2 HERE
             })
     return result
 
@@ -53,14 +52,14 @@ def view_basket():
 def update_quantity(item_id: int, quantity: int):
     for item in basket:
         if item.id == item_id:
-            item.quantity = quantity
+            item.quantity = quantity  # BUG 3: no validation on quantity value
             return item
     raise HTTPException(status_code=404, detail="Item not found")
 
 @app.delete("/basket/{item_id}")
 def remove_from_basket(item_id: int):
     for i, item in enumerate(basket):
-        if item.id == item_id:
+        if item.product_id == item_id:  # BUG 4: should be item.id == item_id
             del basket[i]
             return {"message": "Item removed"}
     raise HTTPException(status_code=404, detail="Item not found")
