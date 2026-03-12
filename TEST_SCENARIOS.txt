@@ -1,0 +1,615 @@
+TEST SUITE: Python CRUD + Tkinter GUI + AI-Assisted Logic Test Scenarios
+
+SECTION: GUI Tests
+
+Test ID: TS-001
+Module: GUI - Main Window
+Scenario: Launch main Tkinter window successfully
+Preconditions: Application is installed and dependencies are available
+Steps:
+1. Start the application.
+2. Observe main window load.
+3. Verify all primary controls are visible.
+Expected Result: Main window opens without crash; all expected widgets are rendered.
+
+Test ID: TS-002
+Module: GUI - Window Lifecycle
+Scenario: Close window using OS close button
+Preconditions: Main window is open
+Steps:
+1. Click window close (X).
+2. Confirm closure prompt if configured.
+3. Observe process exit.
+Expected Result: Application closes gracefully with no hanging process.
+
+Test ID: TS-003
+Module: GUI - Window Lifecycle
+Scenario: Reopen application after previous close
+Preconditions: Application was closed in TS-002
+Steps:
+1. Start the application again.
+2. Verify state loads correctly.
+3. Verify no stale modal dialogs appear.
+Expected Result: App reopens cleanly and is usable.
+
+Test ID: TS-004
+Module: GUI - Buttons
+Scenario: Create button click triggers create action once
+Preconditions: Create form has valid values
+Steps:
+1. Enter valid form data.
+2. Click Create once.
+3. Observe UI and backend request count.
+Expected Result: Exactly one record is created; no duplicate action from single click.
+
+Test ID: TS-005
+Module: GUI - Buttons
+Scenario: Double-click create button handling
+Preconditions: Create form has valid values
+Steps:
+1. Enter valid data.
+2. Double-click Create rapidly.
+3. Inspect created records.
+Expected Result: App prevents accidental duplicates or handles idempotency as defined.
+
+Test ID: TS-006
+Module: GUI - Form
+Scenario: Clear/reset form behavior
+Preconditions: Form fields contain values
+Steps:
+1. Click Reset/Clear.
+2. Verify each input field.
+3. Attempt submit after reset.
+Expected Result: Fields are cleared; validation blocks empty submit if required.
+
+Test ID: TS-007
+Module: GUI - Data Grid/List
+Scenario: UI list refresh after create/update/delete
+Preconditions: At least one record exists
+Steps:
+1. Perform create operation.
+2. Perform update operation.
+3. Perform delete operation.
+Expected Result: List/table updates correctly after each action without manual restart.
+
+Test ID: TS-008
+Module: GUI - Keyboard Accessibility
+Scenario: Keyboard-only navigation through form
+Preconditions: Main window open
+Steps:
+1. Use Tab/Shift+Tab across fields/buttons.
+2. Submit via Enter/Space on focused button.
+3. Verify focus order and action.
+Expected Result: Focus order is logical; controls are keyboard-operable.
+
+Test ID: TS-009
+Module: GUI - Usability
+Scenario: Display of success/error messages
+Preconditions: One successful and one failed action can be triggered
+Steps:
+1. Trigger a successful operation.
+2. Trigger a known invalid operation.
+3. Review message text.
+Expected Result: Messages are clear, actionable, and map to outcome type.
+
+Test ID: TS-010
+Module: GUI - Responsiveness
+Scenario: UI remains responsive during long backend/AI call
+Preconditions: Simulate delayed backend/AI response
+Steps:
+1. Trigger operation requiring network/AI.
+2. Attempt window move and input interaction.
+3. Observe loading indicator/status text.
+Expected Result: UI does not freeze; user sees progress state.
+
+SECTION: CRUD Functional Tests
+
+Test ID: TS-011
+Module: Backend CRUD - Create
+Scenario: Create record with valid required fields
+Preconditions: Backend is running and reachable
+Steps:
+1. Send/create valid record from GUI or API.
+2. Capture returned identifier.
+3. Query record list.
+Expected Result: New record persists and appears with correct values.
+
+Test ID: TS-012
+Module: Backend CRUD - Create
+Scenario: Create record with optional fields omitted
+Preconditions: Optional fields exist in schema
+Steps:
+1. Submit record with only required fields.
+2. Read saved record.
+3. Check defaults.
+Expected Result: Record is created; default/nullable behavior matches schema.
+
+Test ID: TS-013
+Module: Backend CRUD - Create
+Scenario: Prevent duplicate unique record
+Preconditions: One record exists with unique key value
+Steps:
+1. Submit another record with same unique value.
+2. Observe backend response.
+3. Verify list count.
+Expected Result: Duplicate is rejected with proper error; count unchanged.
+
+Test ID: TS-014
+Module: Backend CRUD - Read
+Scenario: Read all records
+Preconditions: Multiple records exist
+Steps:
+1. Trigger list/read-all operation.
+2. Compare returned count with stored count.
+3. Validate fields in each record.
+Expected Result: All records are returned with expected schema.
+
+Test ID: TS-015
+Module: Backend CRUD - Read
+Scenario: Read single record by valid ID
+Preconditions: Known valid ID exists
+Steps:
+1. Request record by ID.
+2. Inspect returned payload.
+3. Compare against source data.
+Expected Result: Correct record is returned with no extra modifications.
+
+Test ID: TS-016
+Module: Backend CRUD - Read
+Scenario: Read single record by non-existent ID
+Preconditions: ID does not exist
+Steps:
+1. Request record by missing ID.
+2. Capture response code/message.
+3. Verify UI handling.
+Expected Result: Not-found response returned; GUI shows appropriate error.
+
+Test ID: TS-017
+Module: Backend CRUD - Update
+Scenario: Update existing record with valid data
+Preconditions: Record exists
+Steps:
+1. Submit update for existing ID.
+2. Read back updated record.
+3. Verify changed and unchanged fields.
+Expected Result: Target fields update correctly; non-target fields remain unchanged.
+
+Test ID: TS-018
+Module: Backend CRUD - Update
+Scenario: Partial update behavior
+Preconditions: API supports partial update or specific update parameters
+Steps:
+1. Update only one mutable field.
+2. Read record.
+3. Verify untouched fields remain original.
+Expected Result: Partial update affects only intended fields.
+
+Test ID: TS-019
+Module: Backend CRUD - Update
+Scenario: Update non-existent record
+Preconditions: ID does not exist
+Steps:
+1. Submit update request with missing ID.
+2. Observe error response.
+3. Confirm no new record created.
+Expected Result: Proper not-found/failed update response; database unchanged.
+
+Test ID: TS-020
+Module: Backend CRUD - Delete
+Scenario: Delete existing record
+Preconditions: Record exists
+Steps:
+1. Trigger delete for valid ID.
+2. Read by same ID.
+3. Verify list count reduced.
+Expected Result: Record is removed and cannot be retrieved.
+
+Test ID: TS-021
+Module: Backend CRUD - Delete
+Scenario: Delete non-existent record
+Preconditions: ID does not exist
+Steps:
+1. Trigger delete on missing ID.
+2. Capture response.
+3. Check list remains unchanged.
+Expected Result: Not-found/handled error; no side effects.
+
+Test ID: TS-022
+Module: Backend CRUD - Persistence
+Scenario: Data persists after application restart
+Preconditions: Persistent storage enabled
+Steps:
+1. Create/update records.
+2. Restart backend and GUI.
+3. Read records.
+Expected Result: Previously saved data is retained correctly.
+
+Test ID: TS-023
+Module: Backend CRUD - Consistency
+Scenario: Concurrent update conflict handling
+Preconditions: Same record open in two sessions
+Steps:
+1. Update record from session A.
+2. Update same record from session B with stale data.
+3. Read final record.
+Expected Result: Conflict strategy is enforced (last-write-wins/version check) as specified.
+
+Test ID: TS-024
+Module: Backend CRUD - Integrity
+Scenario: Delete record referenced by related entity
+Preconditions: Existing relationship/foreign-key-like rule
+Steps:
+1. Attempt deletion of referenced record.
+2. Observe backend response.
+3. Verify related data integrity.
+Expected Result: Operation is blocked or cascaded per business rule without corruption.
+
+SECTION: AI Interaction Tests
+
+Test ID: TS-025
+Module: AI Service Integration
+Scenario: AI suggestion returned for create operation
+Preconditions: AI service available
+Steps:
+1. Trigger create flow requiring AI recommendation.
+2. Capture AI output and selected values.
+3. Complete create operation.
+Expected Result: AI response is consumed correctly and create succeeds.
+
+Test ID: TS-026
+Module: AI Service Integration
+Scenario: AI suggests invalid field value
+Preconditions: AI can return unconstrained text/value
+Steps:
+1. Request AI-assisted input.
+2. Receive out-of-range/invalid suggestion.
+3. Attempt submit.
+Expected Result: Validation blocks invalid AI output and prompts correction.
+
+Test ID: TS-027
+Module: AI Service Integration
+Scenario: AI returns empty/null response
+Preconditions: Mock AI empty payload
+Steps:
+1. Trigger AI-assisted step.
+2. Observe returned empty output.
+3. Continue workflow manually.
+Expected Result: App falls back safely to manual input/default logic.
+
+Test ID: TS-028
+Module: AI Service Integration
+Scenario: AI response malformed JSON/schema mismatch
+Preconditions: Mock malformed AI response
+Steps:
+1. Trigger AI-assisted action.
+2. Parse AI payload in app.
+3. Observe error handling.
+Expected Result: Parse error handled gracefully; no crash; user gets actionable message.
+
+Test ID: TS-029
+Module: AI Service Integration
+Scenario: AI timeout during update decision
+Preconditions: Simulate AI latency beyond timeout
+Steps:
+1. Trigger update requiring AI logic.
+2. Wait for timeout.
+3. Continue with fallback.
+Expected Result: Timeout handled; update either retries or degrades gracefully per policy.
+
+Test ID: TS-030
+Module: AI Service Integration
+Scenario: AI returns contradictory recommendation
+Preconditions: Business rule conflict possible
+Steps:
+1. Provide input causing ambiguous AI advice.
+2. Compare AI output to hard business rules.
+3. Attempt operation.
+Expected Result: Deterministic business rules override AI when conflict occurs.
+
+Test ID: TS-031
+Module: AI Service Integration
+Scenario: AI confidence threshold enforcement
+Preconditions: AI includes confidence score
+Steps:
+1. Trigger AI prediction with low confidence.
+2. Check decision path.
+3. Finalize operation.
+Expected Result: Low-confidence output requires user confirmation or fallback path.
+
+Test ID: TS-032
+Module: AI Service Integration
+Scenario: AI service unavailable/network down
+Preconditions: Disable network to AI endpoint
+Steps:
+1. Trigger AI-assisted CRUD action.
+2. Observe connectivity error.
+3. Retry/continue manually.
+Expected Result: User can continue without AI; clear non-blocking error shown.
+
+Test ID: TS-033
+Module: AI Security
+Scenario: Prompt injection-like AI output handling
+Preconditions: AI output contains harmful instructions/scripts
+Steps:
+1. Feed adversarial prompt context.
+2. Receive unsafe AI text.
+3. Display/store output path.
+Expected Result: Unsafe content is sanitized/ignored; no code execution or UI break.
+
+Test ID: TS-034
+Module: AI Auditability
+Scenario: Log AI input/output metadata for traceability
+Preconditions: Logging enabled
+Steps:
+1. Execute AI-assisted create/update.
+2. Inspect logs.
+3. Verify sensitive data masking.
+Expected Result: Logs include trace IDs/timestamps while protecting secrets/PII.
+
+SECTION: Validation Tests
+
+Test ID: TS-035
+Module: Input Validation - Create
+Scenario: Required field left empty
+Preconditions: Create form open
+Steps:
+1. Leave required field blank.
+2. Click submit.
+3. Observe validation message.
+Expected Result: Submit blocked with clear required-field error.
+
+Test ID: TS-036
+Module: Input Validation - Numeric
+Scenario: Non-numeric value in numeric field
+Preconditions: Numeric input field available
+Steps:
+1. Enter alphabetic string in numeric field.
+2. Submit.
+3. Observe validation state.
+Expected Result: Input rejected; field highlighted/message displayed.
+
+Test ID: TS-037
+Module: Input Validation - Range
+Scenario: Numeric value below minimum boundary
+Preconditions: Field has min constraint
+Steps:
+1. Enter value below min.
+2. Submit.
+3. Check backend and GUI response.
+Expected Result: Value rejected consistently by GUI and backend.
+
+Test ID: TS-038
+Module: Input Validation - Range
+Scenario: Numeric value above maximum boundary
+Preconditions: Field has max constraint
+Steps:
+1. Enter value above max.
+2. Submit.
+3. Check result.
+Expected Result: Value rejected with specific boundary message.
+
+Test ID: TS-039
+Module: Input Validation - Length
+Scenario: String exceeds max length
+Preconditions: Text field has max length
+Steps:
+1. Paste long text above limit.
+2. Submit.
+3. Observe truncation/rejection policy.
+Expected Result: App enforces length rule safely and predictably.
+
+Test ID: TS-040
+Module: Input Validation - Format
+Scenario: Invalid special character/format handling
+Preconditions: Field has pattern constraints
+Steps:
+1. Enter malformed input (e.g., invalid symbols).
+2. Submit.
+3. Verify error.
+Expected Result: Invalid format rejected without backend crash.
+
+Test ID: TS-041
+Module: Security Validation
+Scenario: SQL/command injection string in input fields
+Preconditions: Input accepted from GUI/API
+Steps:
+1. Enter injection-like payload.
+2. Submit create/update.
+3. Inspect response and data store.
+Expected Result: Payload treated as plain text or rejected; no execution/integrity breach.
+
+Test ID: TS-042
+Module: Security Validation
+Scenario: XSS/script payload rendered in Tkinter labels/list
+Preconditions: Text rendering in GUI exists
+Steps:
+1. Save payload containing script-like text.
+2. Read/display record in UI.
+3. Observe rendering behavior.
+Expected Result: Content displayed as inert text; no script execution path.
+
+SECTION: Error Handling Tests
+
+Test ID: TS-043
+Module: Backend Error Handling
+Scenario: 500 internal error during create
+Preconditions: Simulate server exception
+Steps:
+1. Trigger create request causing exception.
+2. Observe GUI error dialog and status area.
+3. Retry operation with valid input.
+Expected Result: Error is shown cleanly; app remains stable; retry works.
+
+Test ID: TS-044
+Module: Network Error Handling
+Scenario: Backend unreachable from GUI
+Preconditions: Stop backend service
+Steps:
+1. Attempt read/create/update/delete from GUI.
+2. Capture error messages.
+3. Restart backend and retry.
+Expected Result: Connection failure handled gracefully; operations recover after restart.
+
+Test ID: TS-045
+Module: Serialization Error Handling
+Scenario: Corrupted/unexpected response payload
+Preconditions: Mock invalid JSON response
+Steps:
+1. Trigger operation expecting JSON.
+2. Receive malformed payload.
+3. Observe GUI behavior.
+Expected Result: Parse failure handled with user-friendly message; no crash.
+
+Test ID: TS-046
+Module: Transaction/Error Recovery
+Scenario: Partial failure between AI decision and DB write
+Preconditions: AI succeeds, DB write fails
+Steps:
+1. Execute AI-assisted create/update.
+2. Force DB failure at write step.
+3. Verify final state.
+Expected Result: No partial/corrupt record persists; clear rollback or failure state.
+
+Test ID: TS-047
+Module: File/Data Persistence Error Handling
+Scenario: Storage file locked or permission denied
+Preconditions: Data file path not writable
+Steps:
+1. Trigger write operation.
+2. Observe error handling.
+3. Restore permission and retry.
+Expected Result: App reports write failure clearly and recovers when path is valid.
+
+Test ID: TS-048
+Module: Logging/Error Reporting
+Scenario: Error logging completeness
+Preconditions: Logging enabled
+Steps:
+1. Trigger known error.
+2. Review log entries.
+3. Confirm no sensitive secrets exposed.
+Expected Result: Logs include stack/context IDs while masking confidential data.
+
+SECTION: Edge Cases
+
+Test ID: TS-049
+Module: Data Edge Case
+Scenario: Create/read with zero-like boundary values
+Preconditions: Numeric fields allow zero in some contexts
+Steps:
+1. Submit zero values where valid.
+2. Read back data.
+3. Verify calculations/display.
+Expected Result: Zero values are handled correctly and consistently.
+
+Test ID: TS-050
+Module: Data Edge Case
+Scenario: Very large but valid numeric values
+Preconditions: Defined upper limit exists
+Steps:
+1. Submit near-maximum valid values.
+2. Perform read/update.
+3. Check UI formatting and backend precision.
+Expected Result: Large values are stored and displayed correctly without overflow.
+
+Test ID: TS-051
+Module: Text Edge Case
+Scenario: Unicode and emoji input in text fields
+Preconditions: UTF-8 support expected
+Steps:
+1. Enter multilingual/emoji text.
+2. Save and read record.
+3. Update/delete same record.
+Expected Result: Text persists and renders correctly without encoding errors.
+
+Test ID: TS-052
+Module: Timing Edge Case
+Scenario: Rapid repeated CRUD operations
+Preconditions: GUI and backend running
+Steps:
+1. Execute rapid create/update/delete sequence.
+2. Monitor UI list and backend state.
+3. Compare expected final state.
+Expected Result: Final state is consistent; no race-induced corruption.
+
+Test ID: TS-053
+Module: Session Edge Case
+Scenario: Operation during app shutdown
+Preconditions: Long-running operation in progress
+Steps:
+1. Start long create/update flow.
+2. Attempt to close app mid-operation.
+3. Reopen and inspect data.
+Expected Result: App handles shutdown safely; no half-written data.
+
+Test ID: TS-054
+Module: Usability Edge Case
+Scenario: User cancels confirmation dialogs
+Preconditions: Delete/update confirmation enabled
+Steps:
+1. Trigger action requiring confirmation.
+2. Click Cancel.
+3. Verify data and UI state.
+Expected Result: Action is aborted cleanly; data remains unchanged.
+
+SECTION: Performance Tests
+
+Test ID: TS-055
+Module: Performance - Read
+Scenario: Load large dataset into Tkinter table
+Preconditions: 10k+ records available (or defined stress volume)
+Steps:
+1. Trigger read-all/list view.
+2. Measure load time and memory usage.
+3. Scroll and interact with table.
+Expected Result: Load time and memory remain within acceptance thresholds; UI stays responsive.
+
+Test ID: TS-056
+Module: Performance - Create
+Scenario: Bulk create throughput
+Preconditions: Batch creation script or repetitive UI automation ready
+Steps:
+1. Create high volume records in fixed duration.
+2. Measure success/failure rate and latency.
+3. Verify resulting count and integrity.
+Expected Result: Throughput meets target; no data loss or duplicate anomalies.
+
+Test ID: TS-057
+Module: Performance - Update
+Scenario: Repeated updates on same and different records
+Preconditions: Large dataset exists
+Steps:
+1. Perform continuous update operations.
+2. Measure average and p95 response times.
+3. Validate final values.
+Expected Result: Latency remains acceptable; final data consistent.
+
+Test ID: TS-058
+Module: Performance - Delete
+Scenario: Bulk delete with UI refresh
+Preconditions: Large dataset exists
+Steps:
+1. Delete many records sequentially/batched.
+2. Monitor UI refresh behavior.
+3. Validate count and resource usage.
+Expected Result: Deletion completes within target time; UI remains stable.
+
+Test ID: TS-059
+Module: Performance - AI
+Scenario: AI-assisted operation latency under load
+Preconditions: Concurrent AI requests can be generated
+Steps:
+1. Trigger multiple AI-assisted CRUD operations concurrently.
+2. Measure timeout/error rates.
+3. Validate fallback path frequency.
+Expected Result: System meets SLA or degrades gracefully with controlled failures.
+
+Test ID: TS-060
+Module: Performance/Stability
+Scenario: Long-duration soak test
+Preconditions: Automated mixed CRUD + AI + GUI interaction script
+Steps:
+1. Run mixed operations continuously for extended period (e.g., 8-24 hours).
+2. Monitor memory/CPU/log growth and error rates.
+3. Verify final data consistency and GUI responsiveness.
+Expected Result: No memory leak or progressive slowdown beyond threshold; system remains stable.

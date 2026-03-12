@@ -28,6 +28,20 @@ The API will be available at `http://127.0.0.1:8000`
 
 Visit `http://127.0.0.1:8000/docs` for interactive API documentation.
 
+## Running the Python UI
+
+With the API server running, start the desktop UI in a second terminal:
+```
+python ui.py
+```
+
+The UI lets you:
+- Create products
+- View products
+- Add items to basket
+- Update basket quantities
+- Remove basket items
+
 ## API Endpoints
 
 ### Products
